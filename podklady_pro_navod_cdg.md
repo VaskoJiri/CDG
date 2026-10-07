@@ -36,7 +36,7 @@ Systém striktně rozlišuje, zda má turnaj mezinárodní sankci od Professiona
 |    Manageru.                          |   |    Live Scoring na ceskydiscgolf.cz.      |
 | 3. Skupiny (flighty) vytvářet         |   | 4. Ředitel sleduje a řídí kolo přes       |
 |    VÝHRADNĚ v PDGA rozhraní.          |   |    Livescoring Dashboard (řeší DNF,       |
-| 4. Do ČDG stáhnout skupiny pouze      |   |    penalizace +2 hody, odemyká karty).    |
+| 4. Do ČDG stáhnout skupiny pouze      |   |    penalizace +2 hody, maže karty).       |
 |    pro náhled hráčům (needitovat!).   |   | 5. Kontrola stavu plateb a výsledků.      |
 | 5. Skórování probíhá VÝHRADNĚ         |   | 6. Validační kontrola a administrativní   |
 |    v aplikaci PDGA Live.              |   |    uzavření turnaje v administraci ČDG.   |
@@ -93,16 +93,40 @@ Administrace turnaje je rozdělena do logických sekcí v levém menu:
 ## 3. Kategorie, ratingové stropy a pravidla rozřazování
 
 ### 3.1 Standardní amatérské kategorie (MA1 až MA4, FA1 až FA4)
-Systém ČDG plně přebírá oficiální mezinárodní řád PDGA a pro standardní amatérské kategorie striktně vynucuje ratingové stropy:
-* **MA1 / FA1**: bez ratingového omezení (strop 970 bodů pro amatérský status)
-* **MA2 / FA2**: rating do 935
-* **MA3 / FA3**: rating do 900
-* **MA4 / FA4**: rating do 850 (označení Novice dle mezinárodních stanov)
+Systém ČDG plně přebírá oficiální mezinárodní řád PDGA a pro standardní amatérské kategorie striktně vynucuje ratingové stropy. Kategorie MA (Mixed Amateur) a FA (Women's Amateur) mají rozdílné ratingové hranice zohledňující odlišnou distribuci výkonnosti:
 
-Tyto ratingové hranice jsou v systému zavedeny natvrdo a ředitel turnaje je nemůže u kategorií nesoucích označení MA1–MA4 individuálně upravovat. Tím je zajištěno, že kategorie mají stejnou váhu a význam napříč celou republikou i vůči zahraničním účastníkům.
+* **Smíšené amatérské kategorie (Mixed Amateur – MA)**:
+  * **MA1**: rating do 969 (strop 970 bodů pro amatérský status, doporučeno od 935)
+  * **MA2**: rating do 934 (strop < 935)
+  * **MA3**: rating do 899 (strop < 900)
+  * **MA4**: rating do 849 (strop < 850, mezinárodní označení Novice)
 
-### 3.2 Vlastní kategorie (Custom divisions)
-Pro regionální turnaje, neligové akce, klubové přebory nebo začátečnické série umožňuje systém vytvoření vlastních kategorií:
+* **Ženské amatérské kategorie (Women's Amateur – FA)**:
+  * **FA1**: rating do 874 (strop 875 bodů pro amatérský status žen, doporučeno od 825)
+  * **FA2**: rating do 824 (strop < 825)
+  * **FA3**: rating do 774 (strop < 775)
+  * **FA4**: rating do 724 (strop < 725, mezinárodní označení Novice)
+
+Tyto ratingové hranice jsou v systému zavedeny natvrdo a ředitel turnaje je nemůže u kategorií nesoucích oficiální označení MA1–MA4 a FA1–FA4 individuálně měnit. Tím je zajištěno, že kategorie mají jednotnou váhu a význam napříč celou republikou i mezinárodně.
+
+### 3.2 Barevné kategorie podle ratingu (Ratings-Based Divisions)
+PDGA i systém ČDG umožňují vypsat turnaj v tzv. **Ratings-Based Divisions (barevné kategorie)**. Tyto kategorie rozdělují startovní pole výhradně podle aktuálního ratingu bez ohledu na věk či pohlaví:
+
+| Barva (ČJ) | Barva (EN) | PDGA kód | Ratingový limit | Charakteristika |
+|---|---|---|---|---|
+| **Zlatá** | Gold | `RPA` | **970+** (bez horního limitu) | Profesionální úroveň (Pro) |
+| **Modrá** | Blue | `RAH` | **< 970** (rating do 969) | Pokročilí hráči (ekvivalent MA1) |
+| **Bílá** | White | `RAD` | **< 935** (rating do 934) | Středně pokročilí (ekvivalent MA2) |
+| **Červená** | Red | `RAE` | **< 900** (rating do 899) | Rekreační hráči (ekvivalent MA3) |
+| **Zelená** | Green | `RAF` | **< 850** (rating do 849) | Začátečníci (ekvivalent MA4) |
+| **Fialová** | Purple | `RAG` | **< 800** (rating do 799) | Mírně pokročilí nováčci |
+| **Žlutá** | Yellow | `RAY` | **< 750** / **< 700** | Úplní nováčci a děti |
+
+* Pokud ředitel vypíše turnaj s PDGA sankcí v těchto oficiálních divizích (s kódy RPA až RAG), jedná se o standardní PDGA formát, který PDGA Tournament Manager plně podporuje.
+* Všechny tyto názvy a kódy jsou v systému ČDG chráněny jako rezervované.
+
+### 3.3 Vlastní kategorie (Custom divisions)
+Pro regionální turnaje, neligové akce, klubové přebory nebo specifické začátečnické série umožňuje systém vytvoření vlastních kategorií:
 * **Nastavitelné parametry**:
   * *Vlastní název*: Slovní pojmenování kategorie.
   * *Omezení pohlaví*: Otevřená kategorie pro všechny (Open/Mixed), nebo pouze pro ženy (Female-only).
@@ -120,12 +144,11 @@ Pro regionální turnaje, neligové akce, klubové přebory nebo začátečnick�
     * PDGA kódy barevných kategorií: `RPA`, `RAH`, `RAD`, `RAE`, `RAF`, `RAG`, `RAY`.
   * Validace je nezávislá na velikosti písmen (case-insensitive) a ořezává mezery. Zabraňuje vzniku duplicitních kategorií v databázi.
 
-### 3.3 Vlastní kategorie na PDGA turnajích
-* PDGA Tournament Manager vlastní české kategorie nezná.
-* Pokud ředitel na turnaji s PDGA sankcí trvá na vlastních kategoriích (např. barevných):
-  1. Turnaj se v administraci ČDG **nesmí propojit s PDGA**.
-  2. Hráči musí na turnaji zapisovat skóre na obou systémech paralelně (na ČDG v lokálních kategoriích, na PDGA Live v oficiálních PDGA kategoriích).
-  3. Turnaj bude mít dvě odlišné výsledkové listiny. Ředitel na sebe bere riziko stížností hráčů na nejednotnost a riziko disciplinárního postihu ze strany PDGA za porušení mezinárodního soutěžního řádu.
+### 3.4 Striktní zákaz vlastních kategorií na PDGA turnajích
+* **Povinnost shody kategorií 1:1**: Každý turnaj pořádaný pod mezinárodní sankcí PDGA **musí mít vypsány výhradně oficiální PDGA kategorie** (oficiální věkové divize, výkonnostní amatérské divize MA/FA, případně oficiální barevné divize RPA až RAG).
+* **Zákaz odlišných a lokálních kategorií**: Je přísně zakázáno vypisovat na PDGA turnaji v systému ČDG jakékoliv vlastní lokální kategorie, které neodpovídají PDGA řádu, nebo provozovat paralelní skórování v odlišných divizích.
+* **Disciplinární odpovědnost**: Použití neoficiálních či neshodných kategorií představuje hrubé porušení soutěžního řádu PDGA i ČADG. Takové jednání vystavuje ředitele turnaje bezodkladnému disciplinárnímu řízení před Disciplinární komisí ČADG a hrozbě mezinárodních sankcí ze strany PDGA.
+* **Jednotnost startovní listiny**: Kategorie v systému ČDG musí přesně a bez výjimky odpovídat kategoriím nastaveným v PDGA Tournament Manageru, aby byl zajištěn bezchybný přenos startovní listiny i import výsledků.
 
 ---
 
@@ -177,21 +200,30 @@ Pro regionální turnaje, neligové akce, klubové přebory nebo začátečnick�
 ## 5. Finance, záštita ČADG, startovné, platby a fakturace
 
 ### 5.1 Záštita ČADG a poplatky za nečleny
-Systém rozlišuje status záštity turnaje:
-* **Turnaje se záštitou ČADG**:
-  * Zahrnuje oficiální turnaje kategorií **ČADG 1**, **ČADG 2**, **ČADG 3** a **ČADG N** (oficiální neligové akce, např. Mistrovství ČR dvojic).
-  * *Automatický odvod asociaci*: Při administrativním uzavření turnaje systém automaticky projde startovní listinu a sečte všechny hráče, kteří v den turnaje neměli aktivní individuální členství v ČADG. Za každého takového hráče systém řediteli turnaje vygeneruje povinný poplatek ve výši **100 Kč**, který ředitel odvádí asociaci.
-  * *Doporučené nastavení v propozicích*: Ředitel by měl v propozicích turnaje vždy nastavit startovné pro nečleny ČADG minimálně o 100 Kč vyšší než pro členy (např. členové 400 Kč, nečlenové 500 Kč). V opačném případě hradí ředitel tento poplatek ze svého rozpočtu.
-* **Turnaje bez záštity ČADG**:
-  * Poplatek 100 Kč za nečlena se negeneruje, sloupec poplatku za nečleny je v rozhraní automaticky skryt.
+Systém rozlišuje status záštity turnaje a automaticky řídí cenotvorbu, tabulku startovného i odvody asociaci:
 
-### 5.2 Dotace na startovné juniorů (50 %)
-* ČADG poskytuje u vybraných celostátních ligových turnajů (např. ČDGT, ADGL) podporu juniorů formou 50% dotace na startovné.
+* **Turnaje se záštitou ČADG (ČADG 1, ČADG 2, ČADG 3, ČADG N)**:
+  * *Poplatky za nečlena asociaci podle kategorie turnaje*:
+    * **ČADG 1**: **100 Kč**
+    * **ČADG 2**: **200 Kč**
+    * **ČADG 3**: **300 Kč**
+    * **ČADG N**: **100 Kč** (oficiální neligové akce, např. MČR dvojic)
+  * *Zadávání startovného ředitelem*: Ředitel turnaje v administraci zadává **pouze normální základní cenu startovného** (určenou pro členy ČADG). Nemusí počítat ani zadávat žádné částky pro nečleny ručně.
+  * *Automatická veřejná tabulka startovného*: Systém k základní částce automaticky připočte příslušný poplatek za nečlena podle typu turnaje a na veřejné stránce propozic vygeneruje přehlednou tabulku se **dvěma sloupci: Člen ČADG a Nečlen ČADG**. Tuto tabulku vidí všichni návštěvníci.
+  * *Automatický platební QR kód*: Při registraci systém sám ověří, zda přihlášený hráč má platné členství v ČADG. Platební předpis i platební QR kód se každému uživateli vygeneruje na míru podle jeho reálného statusu (člen platí základní cenu, nečlen platí cenu navýšenou o poplatek).
+  * *Automatický odvod asociaci při uzavření*: Při administrativním uzavření turnaje systém projde startovní listinu, sečte všechny zúčastněné nečleny ČADG a řediteli vygeneruje souhrnné vyúčtování poplatků za nečleny k odvodu asociaci ČADG.
+* **Turnaje bez záštity ČADG**:
+  * U turnajů bez záštity se generuje **poplatek 20 Kč za každého hráče za použití systému ČDG**.
+  * *Osvobození od poplatku pro ČADG kluby*: Pokud je u turnaje jako organizátor uveden **oficiální klub ČADG**, je turnaj od tohoto poplatku 20 Kč za hráče **zcela osvobozen** (poplatek činí 0 Kč).
+
+### 5.2 Dotace na startovné juniorů
+* ČADG poskytuje u vybraných turnajů podporu juniorů formou dotace na startovné podle oficiálně vyhlášených podmínek podpory pro danou sezónu.
+* **Parametry dotační podpory**: Výše dotace se řídí aktuálním usnesením ČADG pro daný rok (například pro aktuální sezónu činí sleva **50 %, maximálně však 400 Kč**).
 * **Správa nastavení**: Volbu „Juniorská dotace“ smí v systému zapínat výhradně Výkonná rada ČADG.
-* **Chování mechanismu**:
-  * Dotace je vázána na **fyzický věk hráče (do 18 let podle data narození / rodného čísla)**, nikoliv na název kategorie.
-  * Pokud je tato volba u turnaje v databázi aktivní, systém automaticky sníží předepsané startovné na 50 % každému účastníkovi mladšímu 18 let, a to i v případě, že startuje v kategorii dospělých (např. MA1 nebo MPO).
-  * Pokud se u neligového turnaje startovné juniorů samovolně půlí, jedná se o pozůstatek dřívějšího nastavení v databázi, který musí administrátor ČADG ručně vypnout.
+* **Chování mechanismu a tabulka startovného**:
+  * Pokud je tato volba u turnaje zapnuta, veřejná tabulka startovného na stránce propozic automaticky obsahuje **další sloupec uvádějící částku, kterou v dané kategorii platí junior**.
+  * Dotace je vázána na **fyzický věk hráče (do 18 let podle data narození / rodného čísla)**, nikoliv na název vypsané kategorie.
+  * Systém automaticky poníží předepsané startovné a vygeneruje odpovídající platební QR kód každému účastníkovi mladšímu 18 let, a to i v případě, že startuje v divizi dospělých (např. MA1 nebo MPO).
 
 ### 5.3 Stavy plateb a variabilní symboly
 * **Dostupné stavy plateb v administraci**:
@@ -200,11 +232,16 @@ Systém rozlišuje status záštity turnaje:
   * `Zaplaceno (hotovost)` (platba uhrazena na místě v hotovosti)
   * `Zaplatí na místě` (hráč má schválenou úhradu při ranní prezenci)
 * **Logika generování Variabilního symbolu (VS)**:
-  * Pokud ředitel v nastavení platebních údajů turnaje zadá prefix variabilního symbolu (např. `202601`), systém generuje variabilní symboly hráčů s tímto prefixem (např. 1. hráč `202601001`, 2. hráč `202601002` atd.).
+  * Ředitel v nastavení platebních údajů turnaje zadává **prefix variabilního symbolu** (např. `202601`). Systém pak generuje variabilní symboly přihlášených hráčů s tímto prefixem (např. 1. hráč `202601001`, 2. hráč `202601002` atd.).
+  * Zadání prefixu je povinné pro správné fungování párování plateb i generování platebních QR kódů.
   * Variabilní symbol je stabilní a neměnný – případné odhlášení jiných hráčů nesmí změnit platební symboly již přihlášených účastníků.
-* **Platební QR kódy**:
-  * Systém automaticky generuje platební QR kód (standard SPAYD) obsahující číslo účtu, částku a variabilní symbol hráče.
-  * QR kód se hráči zobrazuje na stránce turnaje po přihlášení a odesílá se rovněž v potvrzovacím e-mailu.
+* **Podmínky pro zobrazení platebních QR kódů**:
+  * Aby systém hráčům generoval a zobrazoval platební QR kód (standard SPAYD), musí ředitel v sekci *Finance a platby* splnit následující podmínky:
+    1. **Aktivovat volbu „Zobrazovat QR kód“** (zaškrtnout zapnutí QR plateb).
+    2. **Mít kompletně vyplněné bankovní údaje** (číslo bankovního účtu a kód banky).
+    3. **Mít nastavený prefix variabilního symbolu**.
+  * Bez splnění těchto tří náležitostí systém QR kód nevygeneruje.
+  * Po splnění podmínek se QR kód s přesnou částkou a variabilním symbolem hráči zobrazuje na stránce turnaje ihned po přihlášení a zároveň se odesílá v potvrzovacím e-mailu.
 * **Zahraniční platby**:
   * V administraci lze vyplnit pole „Majitel účtu“ (Account holder name), IBAN a SWIFT/BIC, což zahraničním hráčům usnadňuje zadání mezinárodní SEPA platby.
 
@@ -264,9 +301,8 @@ Mezi těmito dvěma nástroji existuje zásadní koncepční rozdíl:
 * **Nasazování vedoucí skupiny (Leaders flight)**:
   * Při generování flightů do finálových nebo dalších kol podle průběžného pořadí musí být vedoucí skupina nejlepší kategorie nasazena **přednostně na jamku číslo 1**.
 
-### 7.3 Tiskové sestavy a komunikace flightů
+### 7.3 Tiskové sestavy flightů (PDF)
 * **PDF export skupin**: Systém generuje formátovaný PDF přehled skupin vhodný pro tisk a vyvěšení na turnajovém meetingu.
-* **Vložení skupin do e-mailu**: V rozhraní pro odesílání hromadných e-mailů z administrace turnaje je k dispozici tlačítko, které vloží kompletní rozpis skupin a startovních jamek přímo do textu e-mailu hráčům.
 
 ---
 
@@ -319,10 +355,14 @@ Pokud hráč v průběhu kola nemůže pokračovat (zranění, nevolnost, časov
   * Ředitel v Livescoring Dashboardu vyhledá kartu daného hráče.
   * Vloží oficiální penalizaci (nejčastěji **+2 hody**). Trestné hody se přičtou k celkovému výsledku hráče za dané kolo.
 
-### 9.3 Odemčení a oprava odeslané karty
-* Pokud hráči na jamce potvrdí a odešlou kolo s chybou a následně zjistí nesrovnalost:
-  * Ředitel v Livescoring Dashboardu konkrétní skórovací kartu **odemkne**.
-  * Společně s hráči provede korekci zapsaných hodů a kartu opětovně uzamkne a uloží.
+### 9.3 Oprava chyb, mazání karet a odemykání skórování
+Při vzniku nesrovnalostí v zápisu disponují ředitel a hráči odlišnými pravomocemi:
+* **Přímá úprava skóre ředitelem**:
+  * Pokud dojde k drobné chybě v počtu hodů nebo penalizaci na konkrétní jamce, ředitel může v Livescoring Dashboardu otevřít danou kartu a **přímo sám hodnoty přepsat, opravit a uložit**. Opravené skóre se ihned promítne do výsledků.
+* **Smazání karty ředitelem**:
+  * Ředitel v Livescoring Dashboardu karty neodemyká. Pokud je karta zapsána zcela chybně nebo došlo k zásadnímu zmatku, má ředitel možnost celou skórovací kartu v administraci **smazat**.
+* **Odemčení odeslané karty hráčem**:
+  * Pokud hráči kolo již potvrdili a odeslali a následně zjistí, že potřebují v zápisu provést změnu, **odemknout kartu pro další úpravy může sám hráč** přímo ve svém mobilním rozhraní Live Scoringu.
 
 ---
 
@@ -362,16 +402,22 @@ Pořádání turnaje pod sankcí PDGA vyžaduje dodržení přesné posloupnosti
 Uzavření turnaje představuje finální krok turnajového cyklu, který spouští nevratné přepočty. Systém uplatňuje přísné validační mechanismy na ochranu integrity databáze.
 
 ### 11.1 Validační kontrola před uzavřením
-Při pokusu o stisknutí tlačítka **„Uzavřít turnaj“** provede systém automatickou kontrolu všech hráčů na startovní listině:
-* **Podmínka**: Každý hráč musí mít zapsané platné výsledky pro **všechna kola** turnaje, **NEBO** musí mít nastaven status **DNF**.
+Při pokusu o stisknutí tlačítka **„Uzavřít turnaj“** provede systém automatickou validační kontrolu:
+
+1. **Kontrola výsledků hráčů (stávající podmínka)**:
+   * Každý hráč na startovní listině musí mít zapsané platné výsledky pro **všechna vypsaná kola** turnaje, **NEBO** musí mít nastaven status **DNF**.
+   * Pokud má některý hráč prázdná kola, systém uzavření nepovolí.
+2. **Úhrada poplatků asociaci před uzavřením (připravovaná podmínka)**:
+   * V systému se připravuje nová povinná validační podmínka: **ředitel turnaje musí před finálním uzavřením uhradit vygenerované poplatky asociaci** (poplatky za nečleny ČADG u turnajů se záštitou, resp. poplatek 20 Kč za hráče u turnajů bez záštity, pokud není pořadatelem ČADG klub).
+   * Bez zaevidované úhrady poplatků systém nedovolí turnaj definitivně uzavřít a nespustí finální přepočty. Tím se zamezí vzniku neuhrazených závazků po skončení akce.
 
 ```
                            Pokus o uzavření turnaje
                                       |
                                       v
                   +---------------------------------------+
-                  |  Kontrola všech hráčů na startovce:   |
-                  |  Má každý hráč všechna kola, NEBO DNF?|
+                  |  1. Kontrola hráčů na startovce:      |
+                  |  Má každý hráč všechna kola nebo DNF? |
                   +-------------------+-------------------+
                                       |
                          +------------+------------+
@@ -379,19 +425,24 @@ Při pokusu o stisknutí tlačítka **„Uzavřít turnaj“** provede systém a
                         ANO                        NE
                          |                         |
                          v                         v
-               +-------------------+     +-----------------------------------+
-               |  TURNAJ UZAVŘEN   |     |       BLOKACE UZAVŘENÍ            |
-               +-------------------+     +-----------------------------------+
-               | 1. Vyčištění WL.  |     | Systém zobrazí dialogové okno:    |
-               | 2. Výpočet ratingů|     | "Turnaj nelze uzavřít.            |
-               |    a ligových     |     | Následující hráči nemají vyplněná |
-               |    bodů.          |     | všechna kola ani status DNF."     |
-               | 3. Vygenerování   |     |                                   |
-               |    poplatků ČADG. |     | POSTUP NÁPRAVY PRO ŘEDITELE:      |
-               +-------------------+     | 1. Nedohraným hráčům nastavit DNF.|
-                                         | 2. Hráče, kteří vůbec nepřišli,   |
-                                         |    ZCELA SMAZAT ze startovky!     |
-                                         +-----------------------------------+
+       +-----------------------------------+     +-----------------------------------+
+       |  2. Kontrola úhrady poplatků:     |     |       BLOKACE UZAVŘENÍ            |
+       |  (připravovaná podmínka)          |     | Chybí výsledky nebo DNF:          |
+       |  Jsou uhrazeny poplatky asociaci? |     | 1. Nedohraným nastavit DNF.       |
+       +-----------------+-----------------+     | 2. Nenastoupivší hráče SMAZAT!    |
+                         |                       +-----------------------------------+
+            +------------+------------+
+            |                         |
+           ANO                        NE
+            |                         |
+            v                         v
+  +-------------------+     +-----------------------------------+
+  |  TURNAJ UZAVŘEN   |     |       BLOKACE UZAVŘENÍ            |
+  +-------------------+     | Chybí úhrada poplatků ČADG.       |
+  | 1. Vyčištění WL.  |     | Ředitel musí nejprve vyrovnat     |
+  | 2. Výpočet ratingů|     | poplatky vůči asociaci.           |
+  |    a ligy.        |     +-----------------------------------+
+  +-------------------+
 ```
 
 ### 11.2 Hráči, kteří k turnaji vůbec nenastoupili (Neúčast / DNS)
@@ -416,6 +467,7 @@ Jakmile turnaj projde validační kontrolou a je úspěšně uzavřen:
    * V rozhraní Live Scoringu na mobilu se jména obou hráčů zalamují pod sebe a zobrazují se siluety/fotografie obou účastníků se samostatnými odkazy na profily.
 2. **Platba startovného**:
    * Startovné se v systému předepisuje a eviduje za celý tým dohromady. Systém nepodporuje dělení platby na jednotlivé hráče v páru.
+   * *Automatické navýšení za nečleny*: Má-li turnaj dvojic záštitu ČADG (např. ČADG N), systém automaticky navýší startovné týmu v platebním QR kódu o 100 Kč za každého hráče v páru, který není členem ČADG (pokud jsou nečlenové oba, předpis startovného se automaticky zvýší o 200 Kč). Ředitel nic ručně nenastavuje.
 3. **Prezence (Check-in)**:
    * Check-in se provádí za celý tým najednou. Ředitel provádí check-in teprve ve chvíli, kdy jsou na místě fyzicky přítomni oba hráči.
 4. **Vypnutí ratingových limitů**:
@@ -453,7 +505,9 @@ Jakmile turnaj projde validační kontrolou a je úspěšně uzavřen:
 * Mezi MA4 a vyššími kategoriemi (MA1–MA3) jsou body nepřenosné z důvodu odlišných layoutů. Hráč je při přestupu vyhodnocen ve dvou kategoriích.
 
 ### 13.3 Typy bodování v regionálních ligách
-Nový ligový modul ČDG podporuje:
+> **Poznámka (probíhající vývoj)**: Na možnostech a pravidlech bodování v regionálních ligách se v současné době aktivně pracuje. Níže uvedený přehled vychází ze současného návrhu a systémová logika se bude v nejbližší době dále upravovat a měnit.
+
+Nový ligový modul ČDG aktuálně navrhuje či podporuje:
 1. *Lineární sestupné bodování* (100, 99, 98...).
 2. *Relativní bodování podle poražených soupeřů*.
 3. *Bodovací stropy (Cutoff)* – body pouze pro top X hráčů (např. v Hraj Discgolf Tour body pouze pro top 15).
@@ -493,9 +547,6 @@ Nový ligový modul ČDG podporuje:
 
 ### Dotazy ředitelů turnajů (TD FAQ)
 
-**Otázka: Proč systém automaticky ponížil startovné na polovinu (např. z 190 Kč na 95 Kč) u hráče, který nehraje v kategorii juniorů?**
-* **Vysvětlení**: V databázi zůstala u turnaje aktivní dotační volba ČADG pro juniory (50 % sleva). Systém u této dotace kontroluje fyzický věk hráče (do 18 let podle rodného čísla), nikoliv název kategorie. Dotace se tak aplikuje na každého juniora i v otevřené divizi MA1 či MPO. Řešením je kontaktovat ČADG pro ruční vypnutí příznaku v databázi.
-
 **Otázka: Turnaj pod PDGA je řádně odehrán a uzavřen, ale na webu ČDG se u hráčů nezobrazují PDGA ratingy kol. Kde se stala chyba?**
 * **Vysvětlení**: Turnaj buď nebyl v administraci propojen s PDGA tlačítkem „Propojit s PDGA“, nebo ještě nebyl administrativně uzavřen na ČDG. Pro zobrazení ratingů musí turnaj projít celým cyklem: odeslání hráčů do PDGA -> skórování na PDGA Live -> stažení výsledků do ČDG -> uzavření turnaje na ČDG. Teprve po uzavření se oficiální ratingy stáhnou a zobrazí.
 
@@ -518,7 +569,7 @@ Nový ligový modul ČDG podporuje:
 * **Vysvětlení**: Ne. Status DNF je určen výhradně pro hráče, kteří do turnaje nastoupili, ale nedokončili jej. Hráče, kteří k turnaji vůbec nenastoupili (neodehráli ani jamku), musí ředitel turnaje **zcela smazat ze startovní listiny**. Pokud by na startovce zůstali bez vyplněných kol, systém zablokuje uzavření turnaje.
 
 **Otázka: Proč systém při uzavírání turnaje dvojic vygeneroval řediteli poplatek za nečleny ČADG?**
-* **Vysvětlení**: Turnaj měl v nastavení status záštity ČADG N. U každé akce se záštitou asociace systém při uzavření automaticky sečte všechny zúčastněné hráče bez platného členství v ČADG a řediteli vygeneruje poplatek 100 Kč za každého nečlena. V propozicích turnaje je nutné nastavit startovné pro nečleny o 100 Kč vyšší.
+* **Vysvětlení**: Turnaj měl v nastavení status záštity ČADG N (poplatek 100 Kč za každého nečlena). Ředitel v propozicích nemusí nic ručně upravovat – systém sám automaticky zobrazuje navýšené startovné o 100 Kč za každého nečlena v tabulce i v platebním QR kódu při registraci. Vygenerovaný poplatek při uzavření turnaje pak představuje pouze souhrnný předpis k odvodu těchto částek asociaci, které ředitel od nečlenů vybral.
 
 **Otázka: Stáhl jsem si export hráčů v CSV, ale v MS Excel mám místo českých písmen rozsypané znaky. Jak to napravit?**
 * **Vysvětlení**: Soubor CSV neotevírejte dvojklikem. V MS Excel otevřete nový sešit, zvolte Data -> Získat data z textu/CSV, vyberte soubor a v okně náhledu nastavte kódování na 65001: Unicode (UTF-8). Alternativně stáhněte HTML verzi exportu a tabulku překopírujte.
